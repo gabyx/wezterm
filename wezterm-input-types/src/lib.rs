@@ -27,8 +27,12 @@ pub enum KeyCode {
     Physical(PhysKeyCode),
 
     Hyper,
-    Super,
+    LeftHyper,
+    RightHyper,
+    Super, // Left and right super are LeftWindows and RightWindows
     Meta,
+    LeftMeta,
+    RightMeta,
 
     /// Ctrl-break on windows
     Cancel,
@@ -113,10 +117,16 @@ impl KeyCode {
     /// Return true if the key represents a modifier key.
     pub fn is_modifier(&self) -> bool {
         match self {
-            Self::Hyper
-            | Self::CapsLock
+            Self::CapsLock
             | Self::Super
+            | Self::LeftWindows
+            | Self::RightWindows
             | Self::Meta
+            | Self::RightMeta
+            | Self::LeftMeta
+            | Self::Hyper
+            | Self::RightHyper
+            | Self::LeftHyper
             | Self::Shift
             | Self::LeftShift
             | Self::RightShift
@@ -125,9 +135,7 @@ impl KeyCode {
             | Self::RightControl
             | Self::Alt
             | Self::LeftAlt
-            | Self::RightAlt
-            | Self::LeftWindows
-            | Self::RightWindows => true,
+            | Self::RightAlt => true,
             _ => false,
         }
     }
@@ -304,8 +312,12 @@ impl KeyCode {
             | Self::Pause
             | Self::Cancel
             | Self::Hyper
+            | Self::LeftHyper
+            | Self::RightHyper
             | Self::Super
             | Self::Meta
+            | Self::LeftMeta
+            | Self::RightMeta
             | Self::Composed(_)
             | Self::RawCode(_)
             | Self::Char(_)
@@ -1314,10 +1326,14 @@ impl RawKeyEvent {
             LeftControl => 57442,
             LeftAlt => 57443,
             LeftWindows => 57444,
+            LeftMeta => 57446,
+            LeftHyper => 57445,
             RightShift => 57447,
             RightControl => 57448,
             RightAlt => 57449,
             RightWindows => 57450,
+            RightMeta => 57452,
+            RightHyper => 57451,
             _ => match &self.phys_code {
                 Some(phys) => {
                     use PhysKeyCode::*;
@@ -1813,7 +1829,6 @@ impl KeyEvent {
                 format!("\x1b[{c};{modifiers}{event_type}~")
             }
             Char(shifted_key) => {
-                let mut use_legacy = false;
                 let shifted_key = if *shifted_key == '\x08' {
                     // Backspace is really VERASE -> ASCII DEL
                     '\x7f'
@@ -1878,6 +1893,7 @@ impl KeyEvent {
                     }
                 }
 
+                log::info!("kitty_encode: shifted key...");
                 format!("\x1b[{key_code};{modifiers}{event_type}{generated_text}u")
             }
             LeftArrow | RightArrow | UpArrow | DownArrow | Home | End => {
@@ -1933,6 +1949,7 @@ impl KeyEvent {
             }
 
             _ => {
+                log::info!("kitty_encode: dangling...");
                 let code = self.raw.as_ref().and_then(|raw| raw.kitty_function_code());
 
                 match (

@@ -116,8 +116,12 @@ pub enum KeyCode {
     Char(char),
 
     Hyper,
-    Super,
+    LeftHyper,
+    RightHyper,
+    Super, // Left and right super are LeftWindows and RightWindows
     Meta,
+    LeftMeta,
+    RightMeta,
 
     /// Ctrl-break on windows
     Cancel,
@@ -235,8 +239,12 @@ impl KeyCode {
         matches!(
             self,
             Self::Hyper
+                | Self::LeftHyper
+                | Self::RightHyper
                 | Self::Super
                 | Self::Meta
+                | Self::LeftMeta
+                | Self::RightMeta
                 | Self::Shift
                 | Self::LeftShift
                 | Self::RightShift
@@ -569,12 +577,13 @@ impl KeyCode {
 
             // Modifier keys pressed on their own don't expand to anything
             Control | LeftControl | RightControl | Alt | LeftAlt | RightAlt | Menu | LeftMenu
-            | RightMenu | Super | Hyper | Shift | LeftShift | RightShift | Meta | LeftWindows
-            | RightWindows | NumLock | ScrollLock | Cancel | Clear | Pause | CapsLock | Select
-            | Print | PrintScreen | Execute | Help | Applications | Sleep | Copy | Cut | Paste
-            | BrowserBack | BrowserForward | BrowserRefresh | BrowserStop | BrowserSearch
-            | BrowserFavorites | BrowserHome | VolumeMute | VolumeDown | VolumeUp
-            | MediaNextTrack | MediaPrevTrack | MediaStop | MediaPlayPause | InternalPasteStart
+            | RightMenu | Super | Hyper | LeftHyper | RightHyper | Meta | LeftMeta | RightMeta
+            | Shift | LeftShift | RightShift | LeftWindows | RightWindows | NumLock
+            | ScrollLock | Cancel | Clear | Pause | CapsLock | Select | Print | PrintScreen
+            | Execute | Help | Applications | Sleep | Copy | Cut | Paste | BrowserBack
+            | BrowserForward | BrowserRefresh | BrowserStop | BrowserSearch | BrowserFavorites
+            | BrowserHome | VolumeMute | VolumeDown | VolumeUp | MediaNextTrack
+            | MediaPrevTrack | MediaStop | MediaPlayPause | InternalPasteStart
             | InternalPasteEnd => {}
         };
 
