@@ -12,6 +12,7 @@ euclid = "0.22"
 lazy_static = "1.4"
 serde = {version="1.0", features = ["rc", "derive"], optional=true}
 wezterm-dynamic = {path="../wezterm-dynamic"}
+log = "0.4"
 
 [features]
 default = ["serde"]

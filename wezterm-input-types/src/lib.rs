@@ -1646,6 +1646,7 @@ impl KeyEvent {
             && !flags.contains(KittyKeyboardFlags::REPORT_ALL_KEYS_AS_ESCAPE_CODES)
             && self.key_is_down
         {
+            log::info!("kitty_encode: simple text generating key...");
             // Check for simple text generating keys
             match &self.key {
                 Char('\x08') => return '\x7f'.to_string(),
