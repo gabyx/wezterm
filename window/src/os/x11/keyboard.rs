@@ -702,14 +702,12 @@ impl Keyboard {
         ensure!(!new_state.get_raw_ptr().is_null(), "problem with new state");
         let phys_code_map = build_physkeycode_map(&new_keymap);
 
+        // This function is only called from X11.
+        init_modifier_table_x11(&connection, &new_keymap);
+
         self.state.replace(new_state);
         self.keymap.replace(new_keymap);
         self.phys_code_map.replace(phys_code_map);
-
-        let mod_map = match modifier_init {
-            ModifierInit::Wayland => init_modifier_table_wayland(&keymap),
-            ModifierInit::X11(conn) => init_modifier_table_x11(&conn, &keymap),
-        };
 
         Ok(())
     }
